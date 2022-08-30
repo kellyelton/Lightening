@@ -39,16 +39,12 @@ func _on_SpawnBallTimer_timeout():
 
 
 func _on_CleanupTimer_timeout():
-	var cnt = $BallLayer.get_child_count()
-	
-	if cnt < 200: return
 	
 	for child in $BallLayer.get_children():
-		if $BallLayer.get_child_count() < 200: return
-		
 		if not "charge" in child: continue
 		
-		if child.charge < -50 or child.charge > 50: continue
+		if child.charge < -200 or child.charge > 200: continue
+		if child.speed > 0: continue
 	
 		$BallLayer.remove_child(child)
 		child.queue_free()
