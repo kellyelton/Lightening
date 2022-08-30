@@ -24,7 +24,7 @@ wait_time = 0.05
 autostart = true
 
 [node name="CleanupTimer" type="Timer" parent="."]
-wait_time = 2.0
+wait_time = 0.5
 autostart = true
 
 [connection signal="timeout" from="SpawnBallTimer" to="." method="_on_SpawnBallTimer_timeout"]
