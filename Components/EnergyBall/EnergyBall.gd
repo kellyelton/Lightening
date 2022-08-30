@@ -4,12 +4,37 @@ export var charge := 0.0
 
 var current_color = Color.white
 var lightening = []
+var velocity := Vector2.ZERO
+var time_next_switch = 0
+var speed := 15.0
 
 func _ready():
-	#$CollisionShape2D.shape.radius = 10
+	randomize()
+	
+	if randf() > 0.5:
+		velocity *= -1
+
+	velocity = Vector2(rand_range(-1, 1), rand_range(-1, 1))
+	
+	var cp = charge / 1000
+	
+	velocity.y = cp
+	
+	rotate(rand_range(-0.4, 0.4))
+	
+	speed = rand_range(2, 12)
+
 	update_color()
 
 func _process(delta):
+	if speed > 0:
+		position += velocity * delta * speed
+		speed -= delta
+	
+		if OS.get_system_time_msecs() >= time_next_switch:
+			#velocity *= -1
+			time_next_switch = OS.get_system_time_msecs() + 5000
+
 	lightening.clear()
 	for ball in get_parent().get_children():
 		if ball == self: continue
@@ -57,8 +82,12 @@ func update_color():
 
 func _draw():
 	var cc1 = Color(current_color.r, current_color.g, current_color.b, 0.05)
-	draw_circle(Vector2.ZERO, 20, cc1)
+	draw_circle(Vector2(8, 12), 20, cc1)
+	draw_circle(Vector2(-12, -13), 20, cc1)
+	draw_circle(Vector2(0, -6), 20, cc1)
 	var cc2 = Color(current_color.r, current_color.g, current_color.b, 0.03)
-	draw_circle(Vector2.ZERO, 50, cc1)
+	draw_circle(Vector2(-3, 2), 50, cc2)
+	draw_circle(Vector2(3, -2), 50, cc2)
+	draw_circle(Vector2(3, 2), 50, cc2)
 	var cc3 = Color(current_color.r, current_color.g, current_color.b, 0.01)
-	draw_circle(Vector2.ZERO, 100, cc2)
+	draw_circle(Vector2.ZERO, 100, cc3)
