@@ -16,11 +16,12 @@ func _ready():
 
 	velocity = Vector2(rand_range(-1, 1), rand_range(-1, 1))
 	
-	var cp = charge / 1000
+	if randf() > 0.3:
+		var cp = charge / 1000
+		
+		velocity.y = cp
 	
-	velocity.y = cp
-	
-	rotate(rand_range(-0.4, 0.4))
+	rotate(rand_range(-0.3, 0.3))
 	
 	speed = rand_range(2, 12)
 
