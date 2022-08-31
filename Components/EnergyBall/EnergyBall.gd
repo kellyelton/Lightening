@@ -7,6 +7,12 @@ var lightening = []
 var velocity := Vector2.ZERO
 var time_next_switch = 0
 var speed := 15.0
+var scale_direction := 0
+var scale_speed := 0.0
+var lightening_rod := Vector2.ZERO
+
+const min_scale_speed := 0.1
+const max_scale_speed := 0.5
 
 func _ready():
 	randomize()
@@ -25,6 +31,14 @@ func _ready():
 	
 	speed = rand_range(2, 12)
 
+	scale_direction = 1
+	if randf() > 0.5:
+		scale_direction = -1
+
+	scale_speed = rand_range(min_scale_speed, max_scale_speed)
+	
+	lightening_rod = Vector2(rand_range(-10, 10), rand_range(-10, 10))
+
 	update_color()
 
 func _process(delta):
@@ -32,9 +46,20 @@ func _process(delta):
 		position += velocity * delta * speed
 		speed -= delta
 	
-		if OS.get_system_time_msecs() >= time_next_switch:
-			#velocity *= -1
-			time_next_switch = OS.get_system_time_msecs() + 5000
+	if OS.get_system_time_msecs() >= time_next_switch:
+		lightening_rod = Vector2(rand_range(-10, 10), rand_range(-10, 10))
+		time_next_switch = OS.get_system_time_msecs() + rand_range(100, 3000)
+	
+	scale += (scale_speed * scale_direction * Vector2.ONE * delta)
+	
+	if scale.x > 1.5:
+		scale_direction *= -1
+		scale_speed = rand_range(min_scale_speed, max_scale_speed)
+		scale.x = 1.49
+	elif scale.x < 0.5:
+		scale_direction *= -1
+		scale_speed = rand_range(min_scale_speed, max_scale_speed)
+		scale.x = 0.51
 
 	lightening.clear()
 	for ball in get_parent().get_children():
@@ -47,7 +72,7 @@ func _process(delta):
 		
 		var distance = self.position.distance_to(ball.position)
 		
-		var max_distance = 140
+		var max_distance = 140 * scale.x
 		
 		if distance > max_distance: continue
 		
@@ -63,9 +88,7 @@ func _process(delta):
 		charge -= transfer_amount
 		
 		if transfer_amount > 200:
-			var ranvec1 = Vector2(rand_range(-0.2, 0.2), rand_range(-0.2, 0.2))
-			var ranvec2 = Vector2(rand_range(-1, 1), rand_range(-1, 1))
-			lightening.append([self.position + ranvec1, ball.position + ranvec2, transfer_amount])
+			lightening.append([self.position + self.lightening_rod, ball.position + ball.lightening_rod, transfer_amount])
 		
 	update_color()
 		
