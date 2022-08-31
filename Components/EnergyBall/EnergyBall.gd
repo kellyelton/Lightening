@@ -63,7 +63,9 @@ func _process(delta):
 		charge -= transfer_amount
 		
 		if transfer_amount > 200:
-			lightening.append([self.position, ball.position, transfer_amount])
+			var ranvec1 = Vector2(rand_range(-0.2, 0.2), rand_range(-0.2, 0.2))
+			var ranvec2 = Vector2(rand_range(-1, 1), rand_range(-1, 1))
+			lightening.append([self.position + ranvec1, ball.position + ranvec2, transfer_amount])
 		
 	update_color()
 		
