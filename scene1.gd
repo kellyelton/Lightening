@@ -11,13 +11,13 @@ func _unhandled_input(event):
 	if event is InputEventMouseButton:
 		if event.button_index == 1 and event.is_pressed():
 			mouse_left_down = true
-			mouse_position = event.position
+			mouse_position = self.get_local_mouse_position()
 		elif event.button_index == 1 and not event.is_pressed():
 			mouse_left_down = false
-			mouse_position = event.position
+			mouse_position = self.get_local_mouse_position()
 
 	if event is InputEventMouseMotion:
-		mouse_position = event.position
+		mouse_position = self.get_local_mouse_position()
 	
 func _on_SpawnBallTimer_timeout():
 	if not mouse_left_down: return
